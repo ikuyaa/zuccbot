@@ -9,7 +9,7 @@
 
 ## Requirements
 - LavaLink server (You can find public ones here if you wish to not host your own: https://lavalink.darrennathanael.com/)
-- MongoDB (Only if you plan to use the bot this way, there is a local database option in the .env file)
+- MongoDB (Only if you plan to use the bot with mongo, there is a local database option using nedb-promises in the .env file)
 
 ## Things to note
 - Make sure to rename example.env to .env and fill it out.
