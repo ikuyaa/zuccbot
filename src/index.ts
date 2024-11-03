@@ -47,9 +47,9 @@ DBHelper.connect();
 const Nodes: NodeOption[] = [
     {
     name: 'Home' as string,
-    url: process.env.LAVALINK_IP as string,
+    url: process.env.LAVALINK_URL as string,
     auth: process.env.LAVALINK_PASSWORD as string,
-    secure: false,
+    secure: process.env.LAVALINK_SECURE as boolean | undefined,
     },
 ];
 
