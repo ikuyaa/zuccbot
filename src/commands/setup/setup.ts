@@ -1,7 +1,8 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message, ActionRow, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, InteractionResponse } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message, ActionRow, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, InteractionResponse, ChannelType, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { EmbedGenerator, LogHelper, MessageHelper, UserHelper } from "../../helpers/Helpers";
 import { GuildHelper, Time } from "../../helpers/Helpers";
+import {IGuild} from "../../models/Guilds/Guild";
 
 export const data = new SlashCommandBuilder()
     .setName('setup')
@@ -58,13 +59,29 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
 
         switch(i.customId) {
             case 'setup-confirm':
-                await setupGuild(i);
+                await i.deferUpdate();
+                try {
+                    const guild = await setupGuild(i);
+                    if(guild) {
+                        //Send the main music embed here.
+                    } else {
+                        break;
+                    }
+                } catch (err: any) {
+                    LogHelper.log(`❌ Error setting up guild. ${err.message}`);
+                    const embed = EmbedGenerator.Error(`An error occured while trying to setup the server. Please try again later.`)
+                    await i.editReply({ embeds: [embed], components: [] });
+                    MessageHelper.DeleteTimed(message, Time.secs(10));
+                }
+                collector.stop();
                 break;
 
             case 'setup-cancel':
+                await i.deferUpdate();
                 const embed = EmbedGenerator.Cancel(`The setup process has been cancelled. Run \`/setup\` to start the setup process again.`);
-                await message.edit({ embeds: [embed], components: [] });
-                MessageHelper.DeleteTimed(message, Time.secs(10), true);
+                await i.editReply({ embeds: [embed], components: [] });
+                MessageHelper.DeleteTimed(message, Time.secs(10));
+                collector.stop();
                 break;
         }
     });
@@ -85,15 +102,123 @@ export const options: CommandOptions = {
     cooldown: '10s' as string,
 }
 
-async function setupGuild(interaction: Interaction) {
+async function setupGuild(interaction: Interaction): Promise<IGuild | undefined> {
     /*
     *   This function will setup the guild in the database.
     *   1. Send a new reply asking for the music channel.
+    *   2. Once the user selects the music channel, store it in the database.
+    *   3. Edit the reply and ask if the user wants to setup the DJ role.
+    *   4. If the user selects yes, ask for the DJ role.
+    *   5. Store the DJ role in the database.
     *   
     */
 
     if(!interaction.isRepliable()) {
         LogHelper.log(`❌ Error setting up guild. Interaction is not repliable.`);
         return;
-    }    
+    }
+
+    const guildId: string = interaction.guild?.id as string;
+    const userId: string = interaction.user.id;
+
+    const firstEmbed = EmbedGenerator.Alert(`Please select the music channel for ${process.env.BOT_NAME}.\n\n This message will expire in 10 minutes.`);
+    const channelOption: ChannelSelectMenuBuilder = new ChannelSelectMenuBuilder()
+        .setCustomId('music-channel')
+        .setPlaceholder('Select a channel')
+        .setMinValues(1)
+        .addChannelTypes(ChannelType.GuildText)
+
+    const roleOption: RoleSelectMenuBuilder = new RoleSelectMenuBuilder()
+        .setCustomId('dj-role')
+        .setPlaceholder('Select a role')
+        .setMinValues(1);
+
+        
+    //Buttons
+    const yesBtn: any = new ButtonBuilder()
+        .setCustomId('dj-yes')
+        .setLabel('Yes')
+        .setStyle(ButtonStyle.Success)
+
+    const noBtn: any = new ButtonBuilder()
+        .setCustomId('dj-no')
+        .setLabel('No')
+        .setStyle(ButtonStyle.Danger)
+
+    //Action Rows
+    const channelRow: any = new ActionRowBuilder().addComponents(channelOption);
+    const roleRow: any = new ActionRowBuilder().addComponents(roleOption);
+    const buttonRow: any = new ActionRowBuilder().addComponents(yesBtn, noBtn);
+
+    //Send a new reply asking for the music channel.
+    const message: Message = await interaction.editReply({ embeds: [firstEmbed], components: [channelRow] });
+
+    //New object for the guild.
+    const newGuild: IGuild = {} as IGuild;
+    newGuild.guildId = guildId;
+    newGuild.registeredBy = userId;
+
+    //Interaction Collector
+    const filter: any = (i: CommandInteraction) => i.user.id === userId;
+    const collector = message.createMessageComponentCollector({ filter, time: Time.mins(10) });
+
+
+    collector.on('collect', async (i: Interaction) => {
+        if(i.isChannelSelectMenu()) { //Called after the channel is selected.
+            await i.deferUpdate();
+            const channelId = i.values[0];
+            newGuild.musicChannelId = channelId;
+            const embed2 = EmbedGenerator.Alert(`Would you like to setup a DJ role for ${process.env.BOT_NAME}?`);
+            await i.editReply({ embeds: [embed2], components: [buttonRow] });
+            
+        } else if (i.isRoleSelectMenu()) { //Called after the dj role is selected
+            await i.deferUpdate();
+            const roleId = i.values[0];
+            newGuild.djRoleId = roleId;
+            collector.stop("setup-complete");
+        } else if (i.isButton()) { //Called after a button is selected
+            await i.deferUpdate();
+            switch(i.customId) {
+                case 'dj-yes':
+                    const embed3 = EmbedGenerator.Alert(`Please select the DJ role for ${process.env.BOT_NAME}.`);
+                    await i.editReply({ embeds: [embed3], components: [roleRow] });
+                    break;
+
+                case 'dj-no':
+                    collector.stop("dj-no");
+                    break;
+            }
+        }
+
+    });
+
+    collector.on('end', async (collected, reason) => {
+        switch(reason) {
+            case 'time':
+                const embed = EmbedGenerator.Error(`The setup process has timed out. Please run the /setup command again.`);
+                await message.edit({ embeds: [embed], components: [] });
+                MessageHelper.DeleteTimed(message, Time.secs(10), true);
+                break;
+
+            case 'dj-no':
+                newGuild.djRoleId = undefined;
+                await completeSetup(newGuild, interaction);
+                return newGuild;
+
+            case 'setup-complete':
+                await completeSetup(newGuild, interaction);
+                return newGuild;
+        }
+    });
+
+}
+
+async function completeSetup(newGuild: IGuild, interaction: Interaction) {
+    if(!interaction.isRepliable())
+        return;
+
+    await GuildHelper.RegisterGuild(newGuild);
+    const embed5 = EmbedGenerator.Success(`The setup process has been completed. ${process.env.BOT_NAME} is now setup for this server. Enjoy!`);
+    await interaction.editReply({ embeds: [embed5], components: [] });
+    MessageHelper.DeleteTimed(interaction, Time.secs(10), true);
 }

@@ -41,7 +41,8 @@ new CommandKit({
 });
 
 //Making database connection
-DBHelper.connect();
+if(process.env.DB_TYPE?.toUpperCase() === 'MONGO')
+    DBHelper.connect();
 
 //Lavalink Nodes
 const Nodes: NodeOption[] = [
@@ -49,7 +50,7 @@ const Nodes: NodeOption[] = [
     name: 'Home' as string,
     url: process.env.LAVALINK_URL as string,
     auth: process.env.LAVALINK_PASSWORD as string,
-    secure: process.env.LAVALINK_SECURE as boolean | undefined,
+    secure: process.env.LAVALINK_SECURE === 'true' ? true : false,
     },
 ];
 

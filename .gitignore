@@ -2,3 +2,4 @@ desktop.ini
 .env
 node_modules/
 dist/
+src/localDatabases/*

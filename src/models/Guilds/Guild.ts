@@ -3,11 +3,11 @@ import { Schema, model, Document } from 'mongoose';
 export interface IGuild extends Document {
     guildId: string;
     musicChannelId?: string;
-    djRoleId?: string;
+    djRoleId?: string | undefined;
 
     registeredBy: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const GuildSchema = new Schema<IGuild>({
@@ -21,7 +21,6 @@ const GuildSchema = new Schema<IGuild>({
         type: String,
         required: false,
         unique: true,
-        index: true,
     },
     djRoleId: {
         type: String,
