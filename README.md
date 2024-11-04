@@ -1,11 +1,15 @@
 # Music Bot
 
 ## Features
+- Play Youtube, or Soundcloud, tracks.
+- Queue Playlist
+- Change the player's volume
+
+## Commands
 - Play
 - Pause
 - Skip
-- Change Volume
-- Queue Playlist
+- Stop
 
 ## Requirements
 - LavaLink server (You can find public ones here if you wish to not host your own: https://lavalink.darrennathanael.com/)
