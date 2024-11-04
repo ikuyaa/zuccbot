@@ -77,7 +77,7 @@ export default class EmbedGenerator {
 
         return new EmbedBuilder()
             .setTitle('🎵  Now Playing')
-            .setDescription(`[${track.title}](${track.uri})`)
+            .setDescription(`[${track.title}](${track.uri})\n${track.author}`)
             .setThumbnail(track.thumbnail as string)
             .setColor(Colors.Blurple)
             .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
@@ -88,7 +88,7 @@ export default class EmbedGenerator {
 
         return new EmbedBuilder()
             .setTitle('🎵  Song Queued')
-            .setDescription(`[${track.title}](${track.uri})`)
+            .setDescription(`[${track.title}](${track.uri})\n${track.author}`)
             .setThumbnail(track.thumbnail as string)
             .setColor(Colors.Blurple)
             .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
