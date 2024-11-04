@@ -89,8 +89,12 @@ client.musicManager.shoukaku.on('error', (name: string, error: any) => {
     MusicEvents.onMusicError(name, error);
 });
 
-client.musicManager.on('playerEnd', (player: KazagumoPlayer) => {
-    MusicEvents.onPlayerEnd(player);
+client.musicManager.on('playerEnd', async (player: KazagumoPlayer) => {
+    await MusicEvents.onPlayerEnd(player);
+});
+
+client.musicManager.on('playerEmpty', async (player: KazagumoPlayer) => {
+    await MusicEvents.onPlayerEmpty(player);
 });
 
 client.musicManager.on('playerDestroy', async (player: KazagumoPlayer) => {
