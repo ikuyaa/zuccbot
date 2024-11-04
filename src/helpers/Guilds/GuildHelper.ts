@@ -1,8 +1,11 @@
 import Guild, { IGuild } from '../../models/Guilds/Guild';
 import {LogHelper} from '../Helpers';
 import Datastore from 'nedb-promises';
+import 'dotenv/config';
+import client from '../../index';
+import {Collection} from 'mongoose';
 
-const localDB = Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, });
+const localDB: any = process.env.DB_TYPE ==='LOCAL' ? Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, }) : undefined;
 
 export default class GuildHelper {
 
@@ -18,7 +21,7 @@ export default class GuildHelper {
                 return false;
 
         } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
-            const guild: IGuild | null = await localDB.findOne({ guildId: guildId });
+            const guild: IGuild | undefined = await localDB?.findOne({ guildId: guildId });
 
             if(guild) 
                 return true;
@@ -48,7 +51,7 @@ export default class GuildHelper {
             }
         } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
             try {
-                const guild: IGuild | null = await localDB.findOne({ guildId: guildId });
+                const guild: IGuild | null = await localDB?.findOne({ guildId: guildId });
                 return guild;
             } catch (err: any) {
                 LogHelper.log(`❌ Error getting guild ${guildId} from database. Error: ${err}`);
@@ -74,7 +77,7 @@ export default class GuildHelper {
             }
         } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
             try {
-                const newGuild = await localDB.insert({
+                const newGuild = await localDB?.insert({
                     guildId: guild.guildId,
                     musicChannelId: guild.musicChannelId,
                     djRoleId: guild.djRoleId,
@@ -88,6 +91,75 @@ export default class GuildHelper {
             }
         }
 
+        return null;
+    }
+
+    public static async UpdateGuild(guild: IGuild): Promise<IGuild | null> {
+        //Update the guild in the database and return it.
+
+        if(process.env.DB_TYPE?.toUpperCase() === 'MONGO') {
+            try {
+                const updatedGuild = await Guild.findOneAndUpdate({ guildId: guild.guildId }, guild, { new: true });
+                return updatedGuild;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error updating guild ${guild.guildId} in database. Error: ${err}`);
+                throw new Error(`Error updating guild ${guild.guildId} in database.`);
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
+            try {
+                const updatedGuild = await localDB?.updateOne({ guildId: guild.guildId }, { $set: guild }, { returnUpdatedDocs: true, multi: false, upsert: true });
+                return updatedGuild;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error updating guild ${guild.guildId} in database. Error: ${err}`);
+                throw new Error(`Error updating guild ${guild.guildId} in database.`);
+            }
+        }
+
+        return null;
+    }
+
+    public static async GetMainMusicMessageId(guildId: string): Promise<string | null> {
+        if(process.env.DB_TYPE?.toUpperCase() === 'MONGO') {
+            try {
+                const guild: IGuild | null = await Guild.findOne({ guildId: guildId });
+                return guild?.musicMessageId? guild.musicMessageId as string : null ;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error getting main music message id for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
+            try {
+                const guild: IGuild | null = await localDB?.findOne({ guildId: guildId });
+                return guild?.musicMessageId? guild.musicMessageId as string : null ;
+            } catch (err: any) {  
+                LogHelper.log(`❌ Error getting main music message id for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static async GetMainMusicChannelId(guildId: string): Promise<string | null> {
+        if(process.env.DB_TYPE?.toUpperCase() === 'MONGO') {
+            try {
+                const guild: IGuild | null = await Guild.findOne({ guildId: guildId });
+                const musicChannelId = guild?.musicChannelId? guild.musicChannelId as string : null;
+
+                return musicChannelId;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error getting main music channel id for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
+            try {
+                const guild: IGuild | null = await localDB?.findOne({ guildId: guildId });
+                const musicChannelId: string | null = guild?.musicChannelId? guild.musicChannelId as string : null;
+                return musicChannelId;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error getting main music channel id for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        }
         return null;
     }
 }

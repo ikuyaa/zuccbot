@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node ."
+    "start": "npm run build && node dist/index.js"
   },
+  "module": "commonjs",
   "author": "",
   "license": "ISC",
   "description": "",

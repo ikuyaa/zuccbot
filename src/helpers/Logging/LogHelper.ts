@@ -1,5 +1,5 @@
-import path from 'path';
-import date from 'date-and-time';
+import * as path from 'path';
+import * as date from 'date-and-time';
 
 export default class LogHelper {
     

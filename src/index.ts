@@ -13,6 +13,7 @@ declare module 'discord.js' {
         SetupButtons: { [key: string]: ButtonBuilder };
         MusicButtons: { [key: string]: ButtonBuilder };
         ActionRows: { [key: string]: ActionRowBuilder }
+        CachedChannels: Collection<string, string>; //GuildId, ChannelId
     }
 }
 
@@ -45,17 +46,18 @@ new CommandKit({
 if(process.env.DB_TYPE?.toUpperCase() === 'MONGO')
     DBHelper.connect();
 
-//Creating a collector for cooldown commands
+//Creating collectors
 client.cooldowns = new Collection();
+client.CachedChannels = new Collection();
 
 
 //Lavalink Nodes
 const Nodes: NodeOption[] = [
     {
-    name: 'Home' as string,
-    url: process.env.LAVALINK_URL as string,
-    auth: process.env.LAVALINK_PASSWORD as string,
-    secure: process.env.LAVALINK_SECURE === 'true' ? true : false,
+        name: 'Home' as string,
+        url: process.env.LAVALINK_URL as string,
+        auth: process.env.LAVALINK_PASSWORD as string,
+        secure: process.env.LAVALINK_SECURE === 'true' ? true : false,
     },
 ];
 
@@ -85,6 +87,18 @@ client.musicManager.shoukaku.on('ready', (name: string) => {
 
 client.musicManager.shoukaku.on('error', (name: string, error: any) => {
     MusicEvents.onMusicError(name, error);
+});
+
+client.musicManager.on('playerEnd', (player: KazagumoPlayer) => {
+    MusicEvents.onPlayerEnd(player);
+});
+
+client.musicManager.on('playerDestroy', async (player: KazagumoPlayer) => {
+    await MusicEvents.onPlayerDestroy(player);
+});
+
+client.musicManager.on('playerStart', async (player: KazagumoPlayer) => {
+    await MusicEvents.onPlayerStart(player);
 });
 
 
@@ -120,17 +134,22 @@ client.MusicButtons = {
         .setCustomId('music-skip')
         .setLabel(`⏭️`)
         .setStyle(ButtonStyle.Secondary),
+
+    Previous: new ButtonBuilder()
+        .setCustomId('music-previous')
+        .setLabel(`⏮️`)
+        .setStyle(ButtonStyle.Secondary),
 } as { [key: string]: ButtonBuilder };
 
 client.ActionRows = {
 
     //The action row that shows when the music is paused.
     PauseRow: new ActionRowBuilder()
-        .addComponents(client.MusicButtons.Play, client.MusicButtons.Stop, client.MusicButtons.Skip) as ActionRowBuilder,
+        .addComponents(client.MusicButtons.Play, client.MusicButtons.Stop, client.MusicButtons.Previous ,client.MusicButtons.Skip) as ActionRowBuilder,
 
     //The action row that shows when the music is playing.
     PlayRow: new ActionRowBuilder()
-        .addComponents(client.MusicButtons.Pause, client.MusicButtons.Stop, client.MusicButtons.Skip) as ActionRowBuilder,
+        .addComponents(client.MusicButtons.Pause, client.MusicButtons.Stop, client.MusicButtons.Previous, client.MusicButtons.Skip) as ActionRowBuilder,
 
     //The action row that shows when the setup needs to be confirmed from the /setup command.
     SetupRow: new ActionRowBuilder()

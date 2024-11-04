@@ -4,6 +4,7 @@ export interface IGuild extends Document {
     guildId: string;
     musicChannelId?: string;
     djRoleId?: string | undefined;
+    musicMessageId?: string | undefined;
 
     registeredBy: string;
     createdAt?: Date;
@@ -27,6 +28,11 @@ const GuildSchema = new Schema<IGuild>({
         required: false,
         unique: false,
         index: false,
+    },
+    musicMessageId: {
+        type: String,
+        required: false,
+        unique: true,
     },
 
     registeredBy: {

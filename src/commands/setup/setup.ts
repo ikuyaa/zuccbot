@@ -1,8 +1,9 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message, ActionRow, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, InteractionResponse, ChannelType, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message, ActionRow, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, InteractionResponse, ChannelType, ButtonBuilder, ButtonStyle, Channel } from 'discord.js';
 import { EmbedGenerator, LogHelper, MessageHelper, UserHelper } from "../../helpers/Helpers";
 import { GuildHelper, Time } from "../../helpers/Helpers";
 import {IGuild} from "../../models/Guilds/Guild";
+import client from "../../index";
 
 export const data = new SlashCommandBuilder()
     .setName('setup')
@@ -61,12 +62,8 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
             case 'setup-confirm':
                 await i.deferUpdate();
                 try {
-                    const guild = await setupGuild(i);
-                    if(guild) {
-                        //Send the main music embed here.
-                    } else {
-                        break;
-                    }
+                    await setupGuild(i);
+                    break;
                 } catch (err: any) {
                     LogHelper.log(`❌ Error setting up guild. ${err.message}`);
                     const embed = EmbedGenerator.Error(`An error occured while trying to setup the server. Please try again later.`)
@@ -121,7 +118,13 @@ async function setupGuild(interaction: Interaction): Promise<IGuild | undefined>
     const guildId: string = interaction.guild?.id as string;
     const userId: string = interaction.user.id;
 
-    const firstEmbed = EmbedGenerator.Alert(`Please select the music channel for ${process.env.BOT_NAME}.\n\n This message will expire in 10 minutes.`);
+    //Embeds
+    const setupChannelEmbed = EmbedGenerator.Alert(`Do you want to setup a music channel for ${process.env.BOT_NAME}?`);
+    const selectChannelEmbed = EmbedGenerator.Alert(`Please select the music channel for ${process.env.BOT_NAME}.\n\n This message will expire in 10 minutes.`);
+    const djAskEmbed = EmbedGenerator.Alert(`Would you like to setup a DJ role for ${process.env.BOT_NAME}?`);
+    const djSelectEmbed = EmbedGenerator.Alert(`Please select the DJ role for ${process.env.BOT_NAME}.`);
+
+    //Select Menus
     const channelOption: ChannelSelectMenuBuilder = new ChannelSelectMenuBuilder()
         .setCustomId('music-channel')
         .setPlaceholder('Select a channel')
@@ -135,23 +138,34 @@ async function setupGuild(interaction: Interaction): Promise<IGuild | undefined>
 
         
     //Buttons
-    const yesBtn: any = new ButtonBuilder()
+    const channelYesBtn: ButtonBuilder = new ButtonBuilder()
+        .setCustomId('channel-yes')
+        .setLabel('Yes')
+        .setStyle(ButtonStyle.Success)
+
+    const channelNoBtn: ButtonBuilder = new ButtonBuilder()
+        .setCustomId('channel-no')
+        .setLabel('No')
+        .setStyle(ButtonStyle.Danger)
+
+    const djYesBtn: ButtonBuilder = new ButtonBuilder()
         .setCustomId('dj-yes')
         .setLabel('Yes')
         .setStyle(ButtonStyle.Success)
 
-    const noBtn: any = new ButtonBuilder()
+    const djNoBtn: ButtonBuilder = new ButtonBuilder()
         .setCustomId('dj-no')
         .setLabel('No')
         .setStyle(ButtonStyle.Danger)
 
     //Action Rows
+    const channelAskRow: any = new ActionRowBuilder().addComponents(channelYesBtn, channelNoBtn);
     const channelRow: any = new ActionRowBuilder().addComponents(channelOption);
-    const roleRow: any = new ActionRowBuilder().addComponents(roleOption);
-    const buttonRow: any = new ActionRowBuilder().addComponents(yesBtn, noBtn);
+    const djRoleRow: any = new ActionRowBuilder().addComponents(roleOption);
+    const djAskRow: any = new ActionRowBuilder().addComponents(djYesBtn, djNoBtn);
 
     //Send a new reply asking for the music channel.
-    const message: Message = await interaction.editReply({ embeds: [firstEmbed], components: [channelRow] });
+    const message: Message = await interaction.editReply({ embeds: [setupChannelEmbed], components: [channelAskRow] });
 
     //New object for the guild.
     const newGuild: IGuild = {} as IGuild;
@@ -162,14 +176,14 @@ async function setupGuild(interaction: Interaction): Promise<IGuild | undefined>
     const filter: any = (i: CommandInteraction) => i.user.id === userId;
     const collector = message.createMessageComponentCollector({ filter, time: Time.mins(10) });
 
+    let channelSelected: boolean = false;
 
     collector.on('collect', async (i: Interaction) => {
         if(i.isChannelSelectMenu()) { //Called after the channel is selected.
             await i.deferUpdate();
             const channelId = i.values[0];
             newGuild.musicChannelId = channelId;
-            const embed2 = EmbedGenerator.Alert(`Would you like to setup a DJ role for ${process.env.BOT_NAME}?`);
-            await i.editReply({ embeds: [embed2], components: [buttonRow] });
+            await i.editReply({ embeds: [djAskEmbed], components: [djAskRow] });
             
         } else if (i.isRoleSelectMenu()) { //Called after the dj role is selected
             await i.deferUpdate();
@@ -179,9 +193,17 @@ async function setupGuild(interaction: Interaction): Promise<IGuild | undefined>
         } else if (i.isButton()) { //Called after a button is selected
             await i.deferUpdate();
             switch(i.customId) {
+                case 'channel-yes':
+                    channelSelected = true;
+                    await i.editReply({ embeds: [selectChannelEmbed], components: [channelRow] });
+                    break;
+
+                case 'channel-no':
+                    await i.editReply({embeds: [djAskEmbed], components: [djAskRow]});
+                    break;
+
                 case 'dj-yes':
-                    const embed3 = EmbedGenerator.Alert(`Please select the DJ role for ${process.env.BOT_NAME}.`);
-                    await i.editReply({ embeds: [embed3], components: [roleRow] });
+                    await i.editReply({ embeds: [djSelectEmbed], components: [djRoleRow] });
                     break;
 
                 case 'dj-no':
@@ -202,23 +224,45 @@ async function setupGuild(interaction: Interaction): Promise<IGuild | undefined>
 
             case 'dj-no':
                 newGuild.djRoleId = undefined;
-                await completeSetup(newGuild, interaction);
+                await completeSetup(newGuild, interaction, channelSelected);
                 return newGuild;
 
             case 'setup-complete':
-                await completeSetup(newGuild, interaction);
+                await completeSetup(newGuild, interaction, channelSelected);
                 return newGuild;
         }
     });
 
 }
 
-async function completeSetup(newGuild: IGuild, interaction: Interaction) {
+async function completeSetup(newGuild: IGuild, interaction: Interaction, channelSelected: boolean) {
     if(!interaction.isRepliable())
         return;
 
     await GuildHelper.RegisterGuild(newGuild);
-    const embed5 = EmbedGenerator.Success(`The setup process has been completed. ${process.env.BOT_NAME} is now setup for this server. Enjoy!`);
-    await interaction.editReply({ embeds: [embed5], components: [] });
+    const setupSuccessEmbed = EmbedGenerator.Success(`The setup process has been completed. ${process.env.BOT_NAME} is now setup for this server. Enjoy!`);
+    await interaction.editReply({ embeds: [setupSuccessEmbed], components: [] });
     MessageHelper.DeleteTimed(interaction, Time.secs(10), true);
+
+    if(channelSelected) {
+        const channel: Channel = interaction.guild?.channels.cache.get(newGuild.musicChannelId as string) as Channel
+        if(channel) {
+            const embed = EmbedGenerator.MusicDefault();
+            if(!channel.isSendable()) { //If we can't send to the required channel, send a message to the interaction.
+                const embed = EmbedGenerator.ChannelLocked(`I don't have permission to send messages in the music channel. Please make sure I have the required permissions.`);
+                const message: Message = await interaction.followUp({ embeds: [embed] });
+                MessageHelper.DeleteTimed(message, Time.secs(10), true);
+                return;
+            }
+
+            const row: any = client.ActionRows.PauseRow;
+
+            const mainMsg: Message = await channel.send({ embeds: [embed], components: [row] });
+            newGuild.musicMessageId = mainMsg.id;
+            await GuildHelper.UpdateGuild(newGuild);
+            return;
+        }
+    } else {
+        return;
+    }
 }

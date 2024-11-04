@@ -21,15 +21,8 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
     const member = interaction.member as GuildMember;
     const channel: any = member.voice.channel;
 
-    if(!player) {
-        player = await client.musicManager.createPlayer({
-            guildId: interaction.guildId as string,
-            textId: interaction.channelId as string,
-            voiceId: member?.voice.channelId as string,
-            volume:  Number(process.env.DEFAULT_VOLUME),
-            deaf: true as boolean,
-        });
-    }
+    if(!player)
+        player = await MusicHelper.createPlayer(interaction);
 
     if(!channel.permissionsFor(interaction.guild?.members.me).has(PermissionsBitField.Flags.Connect)) {
         const embed = EmbedGenerator.ChannelLocked('Please give me permission to join your channel, or select a different channel.');
@@ -39,7 +32,8 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
     }
 
     try {
-        const results = await MusicHelper.playSong(interaction, song as string, player);
+        const member = interaction.member as GuildMember;
+        const results = await MusicHelper.playSong(member, song as string, player);
         const embed = player.queue.length > 0? EmbedGenerator.QueuedEmbed(results.tracks[0]) : EmbedGenerator.PlayEmbed(results.tracks[0]);
         await interaction.reply({ embeds: [embed] });
         

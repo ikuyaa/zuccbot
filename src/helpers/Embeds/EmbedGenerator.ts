@@ -57,6 +57,7 @@ export default class EmbedGenerator {
         const embed = EmbedBuilder.from(currentEmbed);
         const fields: Array<any> = [];
         if(player.queue.length > 0){
+            fields.push({ name: '**__Queue__**', value: ' ' });
             for(const track of player.queue) {
                 fields.push({ name: track.title, value: track.author }) 
             }
