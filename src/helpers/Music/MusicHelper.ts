@@ -140,7 +140,7 @@ export default class MusicHelper {
             return;
         }
 
-        await player?.play(previous);
+        await player?.play(player.getPrevious(true));
         const embed = EmbedGenerator.PlayEmbed(previous);
         await interaction.reply({ embeds: [embed] });
         return;
