@@ -5,9 +5,8 @@ import 'dotenv/config';
 import client from '../../index';
 import {TextChannel} from 'discord.js';
 import { Message } from 'discord.js';
-import tr from 'date-and-time/locale/tr';
 
-const localDB: any = process.env.DB_TYPE ==='LOCAL' ? Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, }) : undefined;
+const localDB: any = () => process.env.DB_TYPE ==='LOCAL' ? Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, }) : undefined;
 
 export default class GuildHelper {
 
