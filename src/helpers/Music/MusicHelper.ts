@@ -1,4 +1,4 @@
-import { GuildMember, Interaction, Message, Presence} from "discord.js";
+import { GuildMember, Interaction, Message, Presence, VoiceBasedChannel, VoiceChannel, VoiceState} from "discord.js";
 import { KazagumoPlayer, KazagumoSearchResult } from "kazagumo";
 import client from "../../index";
 import { EmbedGenerator, MessageHelper, Time } from "../Helpers";
@@ -32,13 +32,10 @@ export default class MusicHelper {
         return player;
     }
 
-    public static async playSong(member: GuildMember, song: string, player: KazagumoPlayer): Promise<KazagumoSearchResult> {
+    public static async playSong(member: GuildMember, song: string, player: KazagumoPlayer, channel: VoiceBasedChannel): Promise<KazagumoSearchResult> {
         try {
             if(!player || !song)
                 throw new Error('Invalid player or song provided.');
-        
-
-            const { channel } = member?.voice;
     
             if(!channel)
                 throw new Error('You must be in a voice channel to play music.');

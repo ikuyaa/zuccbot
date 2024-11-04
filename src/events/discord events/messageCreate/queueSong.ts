@@ -1,4 +1,4 @@
-import {Client, Message, GuildMember, PermissionsBitField, MessageType, GuildChannel, TextChannel, VoiceChannel, InteractionType, Embed} from "discord.js";
+import {Client, Message, GuildMember, PermissionsBitField, MessageType, GuildChannel, TextChannel, VoiceChannel, InteractionType, Embed, VoiceState, VoiceBasedChannel} from "discord.js";
 import { KazagumoPlayer } from "kazagumo";
 import {LogHelper, MusicHelper, EmbedGenerator, MessageHelper, Time, GuildHelper} from "../../../helpers/Helpers";
 
@@ -21,28 +21,37 @@ export default async (message: Message, client: Client) => {
         const embed = EmbedGenerator.Error('This server is not setup. Please run `/setup` to setup the server.');
         await message.reply({ embeds: [embed] });
         MessageHelper.DeleteTimed(message, Time.secs(10));
+        await message.delete();
         return;
     }
 
-    const channel: any = message.member?.voice.channel;
+    const channel: VoiceBasedChannel = message.member?.voice.channel as VoiceBasedChannel;
     const song = message.content;
     let player: KazagumoPlayer | undefined = client.musicManager.players.get(message.guild?.id as string);
 
-    //Making sure there is a player, if not we're creating one
-    if(!player)
-        player = await MusicHelper.createPlayerFromMessage(message);
+    if(!channel) {
+        const embed = EmbedGenerator.Error('You must be in a voice channel to play music.');
+        const errorMsg: Message = await message.reply({ embeds: [embed] });
+        MessageHelper.DeleteTimed(errorMsg, Time.secs(10), true);
+        await message.delete();
+        return;
+    }
 
     //Making sure we have the permission to join the voice channel.
-    if(!channel.permissionsFor(message.guild?.members.me).has(PermissionsBitField.Flags.Connect)) {
+    if(!channel.permissionsFor(message.guild?.members.me as any).has(PermissionsBitField.Flags.Connect)) {
         const embed = EmbedGenerator.ChannelLocked('Please give me permission to join your channel, or select a different channel.');
         const errorMsg: Message = await channel.send({ embeds: [embed] });
         MessageHelper.DeleteTimed(errorMsg, Time.secs(10), true);
         return;
     }
 
+    //Making sure there is a player, if not we're creating one
+    if(!player)
+        player = await MusicHelper.createPlayerFromMessage(message);
+
     try {
         const member = message.member as GuildMember;
-        const results = await MusicHelper.playSong(member, song, player);
+        const results = await MusicHelper.playSong(member, song, player, channel);
 
         if(results.tracks.length === 0) {
             await message.delete();
