@@ -5,6 +5,7 @@ import DBHelper from './DB/DBHelper';
 import EmbedGenerator from './Embeds/EmbedGenerator';
 import UserHelper from './User/UserHelper';
 import GuildHelper from './Guilds/GuildHelper';
+import MusicHelper from './Music/MusicHelper';
 
 export {
     Time,
@@ -13,5 +14,6 @@ export {
     DBHelper,
     EmbedGenerator,
     UserHelper,
-    GuildHelper
+    GuildHelper,
+    MusicHelper,
 }

@@ -4,6 +4,7 @@ import { CommandKit } from 'commandkit';
 import { Kazagumo, KazagumoPlayer, KazagumoQueue, Plugins } from 'kazagumo';
 import { Shoukaku, Connectors, NodeOption, ShoukakuOptions, PlayerUpdate } from 'shoukaku';
 import { DBHelper, Time } from "./helpers/Helpers";
+import MusicEvents from "./events/music events/MusicEvents";
 
 declare module 'discord.js' {
     interface Client {
@@ -44,6 +45,10 @@ new CommandKit({
 if(process.env.DB_TYPE?.toUpperCase() === 'MONGO')
     DBHelper.connect();
 
+//Creating a collector for cooldown commands
+client.cooldowns = new Collection();
+
+
 //Lavalink Nodes
 const Nodes: NodeOption[] = [
     {
@@ -68,6 +73,20 @@ client.musicManager = new Kazagumo({
             guild.shard.send(payload);
     }
 }, new Connectors.DiscordJS(client), Nodes, shoukakuSettings);
+
+//Music Events
+client.musicManager.on('playerCreate', (player: KazagumoPlayer) => {
+    MusicEvents.onPlayerCreate(player);
+});
+
+client.musicManager.shoukaku.on('ready', (name: string) => {
+    MusicEvents.onMusicReady(name);
+});
+
+client.musicManager.shoukaku.on('error', (name: string, error: any) => {
+    MusicEvents.onMusicError(name, error);
+});
+
 
 client.SetupButtons = {
     SetupCancel: new ButtonBuilder()

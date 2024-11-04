@@ -36,6 +36,13 @@ export default class EmbedGenerator {
             .setDescription(message)
             .setColor(Colors.Yellow);
     }
+
+    public static ChannelLocked(message: string): EmbedBuilder {
+        return new EmbedBuilder()
+            .setTitle('🔒  I Don\'t have permission to join your channel.')
+            .setDescription(message)
+            .setColor(Colors.Red);
+    }
     
     public static MusicDefault(): EmbedBuilder {
         return new EmbedBuilder()
@@ -62,5 +69,27 @@ export default class EmbedGenerator {
             .setImage(currentTrack.thumbnail as string)
             .setFields(fields);
             
+    }
+
+    public static PlayEmbed(track: KazagumoTrack): EmbedBuilder {
+        const requester = track.requester as User;
+
+        return new EmbedBuilder()
+            .setTitle('🎵  Now Playing')
+            .setDescription(`[${track.title}](${track.uri})`)
+            .setThumbnail(track.thumbnail as string)
+            .setColor(Colors.Blurple)
+            .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
+    }
+
+    public static QueuedEmbed(track: KazagumoTrack): EmbedBuilder {
+        const requester = track.requester as User;
+
+        return new EmbedBuilder()
+            .setTitle('🎵  Song Queued')
+            .setDescription(`[${track.title}](${track.uri})`)
+            .setThumbnail(track.thumbnail as string)
+            .setColor(Colors.Blurple)
+            .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
     }
 }
