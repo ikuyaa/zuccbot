@@ -3,7 +3,9 @@ import {LogHelper} from '../Helpers';
 import Datastore from 'nedb-promises';
 import 'dotenv/config';
 import client from '../../index';
-import {Collection} from 'mongoose';
+import {TextChannel} from 'discord.js';
+import { Message } from 'discord.js';
+import tr from 'date-and-time/locale/tr';
 
 const localDB: any = process.env.DB_TYPE ==='LOCAL' ? Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, }) : undefined;
 
@@ -161,5 +163,118 @@ export default class GuildHelper {
             }
         }
         return null;
+    }
+
+    public static async GetDjRoleId(guildId: string): Promise<string | null> {
+        if(process.env.DB_TYPE?.toUpperCase() === 'MONGO') {
+            try {
+                const guild: IGuild | null = await Guild.findOne({ guildId: guildId });
+                return guild?.djRoleId? guild.djRoleId as string : null;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error getting DJ role id for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
+            try {
+                const guild: IGuild | null = await localDB?.findOne({ guildId: guildId });
+                return guild?.djRoleId? guild.djRoleId as string : null;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error getting DJ role id for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static async GetMainMusicMessage(guildId: string) : Promise<Message | null> {
+        if(process.env.DB_TYPE?.toUpperCase() === "MONGO") {
+            try {
+                const guild: IGuild | null = await Guild.findOne({ guildId: guildId });
+                if(!guild) {
+                    LogHelper.log(`❌ Error getting main music message for guild ${guildId}. Error: Guild not found.`);
+                    return null;
+                }
+
+                const channelId: string = guild?.musicChannelId as string;
+                const messageId: string = guild?.musicMessageId as string;
+                const channel: TextChannel = await client.channels.fetch(channelId) as TextChannel;
+                const message: Message = await channel.messages.fetch(messageId) as Message;
+                return message;  
+
+            } catch (err: any) {
+                LogHelper.log(`❌ Error getting main music message for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === "LOCAL") {
+            try {
+                const guild: IGuild | null = await localDB?.findOne({ guildId: guildId });
+
+                if(!guild) {
+                    LogHelper.log(`❌ Error getting main music message for guild ${guildId}. Error: Guild not found.`);
+                    return null;
+                }
+
+                const channelId: string = guild?.musicChannelId as string;
+                const messageId: string = guild?.musicMessageId as string;
+
+                const channel: TextChannel | null = await client.channels.fetch(channelId) as TextChannel;
+                const message: Message | null = await channel.messages.fetch(messageId) as Message;
+
+                if(!message) {
+                    return null;
+                }
+
+                return message;
+                
+            } catch (err: any) {
+                //There was never a music channel set up, so we're ignoring this discord error
+                if(err.code === 50035) 
+                    return null;
+
+                LogHelper.log(`❌ Error getting main music message for guild ${guildId}. Error: ${err}`);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static async DeleteGuild(guildId: string) {
+        if(process.env.DB_TYPE?.toUpperCase() === 'MONGO') {
+            try {
+                await Guild.deleteOne({ guildId: guildId });
+            } catch (err: any) {
+                LogHelper.log(`❌ Error deleting guild ${guildId} from database. Error: ${err}`);
+                throw new Error(`Error deleting guild ${guildId} from database.`);
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === 'LOCAL') {
+            try {
+                await localDB?.remove({ guildId: guildId });
+            } catch (err: any) {
+                LogHelper.log(`❌ Error deleting guild ${guildId} from database. Error: ${err}`);
+                throw new Error(`Error deleting guild ${guildId} from database.`);
+            }
+        }
+    }
+
+    public static async GuildHasDJRole(guildId: string): Promise<boolean> {
+        if(process.env.DB_TYPE?.toUpperCase() === "MONGO") {
+            try {
+                const guild: IGuild | null = await Guild.findOne({ guildId: guildId });
+                return guild?.djRoleId? true : false;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error checking if guild ${guildId} has a DJ role. Error: ${err}`);
+                return false;
+            }
+        } else if (process.env.DB_TYPE?.toUpperCase() === "LOCAL") {
+            try {
+                const guild: IGuild | null = await localDB?.findOne({ guildId: guildId });
+                return guild?.djRoleId? true : false;
+            } catch (err: any) {
+                LogHelper.log(`❌ Error checking if guild ${guildId} has a DJ role. Error: ${err}`);
+                return false;
+            }
+        }
+
+        return false;
     }
 }

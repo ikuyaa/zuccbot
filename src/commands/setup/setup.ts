@@ -121,7 +121,7 @@ async function setupGuild(interaction: Interaction): Promise<IGuild | undefined>
     //Embeds
     const setupChannelEmbed = EmbedGenerator.Alert(`Do you want to setup a music channel for ${process.env.BOT_NAME}?`);
     const selectChannelEmbed = EmbedGenerator.Alert(`Please select the music channel for ${process.env.BOT_NAME}.\n\n This message will expire in 10 minutes.`);
-    const djAskEmbed = EmbedGenerator.Alert(`Would you like to setup a DJ role for ${process.env.BOT_NAME}?`);
+    const djAskEmbed = EmbedGenerator.Alert(`Would you like to setup a DJ role for ${process.env.BOT_NAME}?\n\n **Please note:** The DJ, or Administrator, role is required to use **ANY** of the music commands.\n\nYou can select no, and anyone can use the music commands.`);
     const djSelectEmbed = EmbedGenerator.Alert(`Please select the DJ role for ${process.env.BOT_NAME}.`);
 
     //Select Menus
