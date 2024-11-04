@@ -3,6 +3,7 @@ import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message,
 import client from '../../index';
 import {EmbedGenerator, LogHelper, MessageHelper, MusicHelper, Time} from "../../helpers/Helpers";
 import { KazagumoPlayer } from "kazagumo";
+import 'dotenv/config';
 
 
 export const data = new SlashCommandBuilder()
@@ -25,7 +26,7 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
             guildId: interaction.guildId as string,
             textId: interaction.channelId as string,
             voiceId: member?.voice.channelId as string,
-            volume: 40 as number,
+            volume:  Number(process.env.DEFAULT_VOLUME),
             deaf: true as boolean,
         });
     }

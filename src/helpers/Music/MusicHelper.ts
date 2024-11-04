@@ -1,9 +1,7 @@
-import {CommandInteraction, GuildMember, Interaction} from "discord.js";
-import {Kazagumo, KazagumoPlayer, KazagumoSearchResult} from "kazagumo";
+import { GuildMember, Interaction, Presence} from "discord.js";
+import { KazagumoPlayer, KazagumoSearchResult } from "kazagumo";
 import client from "../../index";
-import {LogHelper} from "../Helpers";
-import {PlayOptions} from "shoukaku";
-import {EmbedGenerator, MessageHelper, Time} from "../Helpers";
+import { EmbedGenerator, MessageHelper, Time } from "../Helpers";
 
 export default class MusicHelper {
     public static async playSong(interaction: Interaction, song: string, player: KazagumoPlayer): Promise<KazagumoSearchResult> {
@@ -115,5 +113,36 @@ export default class MusicHelper {
             await interaction.reply({ embeds: [embed] });
             MessageHelper.DeleteTimed(interaction, Time.secs(10));
         }
+    }
+
+    public static async setVolume(player: KazagumoPlayer | undefined, interaction: Interaction, volume: number) {
+        if(!interaction.isRepliable())
+            return;
+
+        player?.volume == volume;
+
+        const embed = EmbedGenerator.Success(`Volume set to ${volume}\nThis change will work on the next song.`);
+        await interaction.reply({ embeds: [embed] });
+        MessageHelper.DeleteTimed(interaction, Time.secs(10));
+        return;
+    }
+
+    public static async playPrevious(player: KazagumoPlayer | undefined, interaction: Interaction) {
+        if(!interaction.isRepliable())
+            return;
+
+        const previous = player?.getPrevious();
+
+        if(!previous) {
+            const embed = EmbedGenerator.Error('No previous song found.');
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+            return;
+        }
+
+        await player?.play(previous);
+        const embed = EmbedGenerator.PlayEmbed(previous);
+        await interaction.reply({ embeds: [embed] });
+        return;
     }
 }
