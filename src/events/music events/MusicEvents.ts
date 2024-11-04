@@ -23,6 +23,11 @@ export default class MusicEvents {
     public static async onPlayerEnd(player: KazagumoPlayer) {
         // Called when a track ends
         LogHelper.log(`Track ended in guild ${player.guildId}`);
+
+        if(player.queue.length === 0) {
+            await player.destroy();
+            return;
+        }
     }
 
     public static async onPlayerStart(player: KazagumoPlayer) {

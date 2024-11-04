@@ -36,9 +36,7 @@ export default class MusicHelper {
         try {
             if(!player || !song)
                 throw new Error('Invalid player or song provided.');
-    
-            if(!channel)
-                throw new Error('You must be in a voice channel to play music.');
+
             let results: KazagumoSearchResult = await client.musicManager.search(song, { requester: member.user });
 
             if(results.tracks.length === 0)
