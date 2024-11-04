@@ -71,4 +71,37 @@ export default class MusicHelper {
         return;
     }
     }
+
+    public static async pauseSong(player: KazagumoPlayer | undefined, interaction: Interaction) {
+        if(!interaction.isRepliable())
+            return;
+
+        if(!player) {
+            const embed = EmbedGenerator.Error('No player found. Are you playing any music?');
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+            return;
+        }
+
+        if(!player.queue.current) {
+            const embed = EmbedGenerator.Error('No song is currently playing.');
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+            return;
+        }
+
+        if(player.paused) {
+            player.pause(false);
+            const embed = EmbedGenerator.PausedEmbed(false, player.queue.current);
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+        } else {
+            player.pause(true);
+            const embed = EmbedGenerator.PausedEmbed(true, player.queue.current);
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+        }
+
+        return;
+    }
 }

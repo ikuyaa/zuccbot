@@ -99,4 +99,12 @@ export default class EmbedGenerator {
             .setTitle('🎵  No more tracks in the queue.')
             .setColor(Colors.Blurple);
     }
+
+    public static PausedEmbed(isPaused: boolean, track: KazagumoTrack): EmbedBuilder {
+        return new EmbedBuilder()
+            .setTitle(isPaused? '⏸️  Track Paused' : '▶️  Track Resumed')
+            .setDescription(`${track.title}\n${track.author}`)
+            .setThumbnail(track.thumbnail as string)
+            .setColor(Colors.Blurple);
+    }
 }
