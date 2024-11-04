@@ -1,3 +1,4 @@
+import tr from 'date-and-time/locale/tr';
 import { EmbedBuilder, Colors, Message, User } from 'discord.js';
 import {KazagumoPlayer, KazagumoSearchResult, KazagumoTrack} from 'kazagumo';
 
@@ -91,5 +92,11 @@ export default class EmbedGenerator {
             .setThumbnail(track.thumbnail as string)
             .setColor(Colors.Blurple)
             .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
+    }
+
+    public static NoMoreTracks(): EmbedBuilder {    
+        return new EmbedBuilder()
+            .setTitle('🎵  No more tracks in the queue.')
+            .setColor(Colors.Blurple);
     }
 }
