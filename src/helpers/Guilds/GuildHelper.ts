@@ -1,12 +1,12 @@
 import Guild, { IGuild } from '../../models/Guilds/Guild';
 import {LogHelper} from '../Helpers';
-import Datastore from 'nedb-promises';
+const Datastore = require('nedb-promises');
 import 'dotenv/config';
 import client from '../../index';
 import {TextChannel} from 'discord.js';
 import { Message } from 'discord.js';
 
-const localDB: any = () => process.env.DB_TYPE ==='LOCAL' ? Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, }) : undefined;
+const localDB: any = process.env.DB_TYPE ==='LOCAL' ? Datastore.create({ filename: './src/localDatabases/Guilds.db', autoload: true, }) : undefined;
 
 export default class GuildHelper {
 
