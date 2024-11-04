@@ -104,4 +104,16 @@ export default class MusicHelper {
 
         return;
     }
+
+    public static async stopPlayer(player: KazagumoPlayer | undefined, interaction: Interaction) {
+        if(!interaction.isRepliable())
+            return;
+
+        if(player) {
+            player.destroy();
+            const embed = EmbedGenerator.Success('Player stopped.');
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+        }
+    }
 }
