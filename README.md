@@ -35,7 +35,7 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 ## Installation
 ⁣1. Create a bot from the Discord Developer Portal
 2. Go to the Bot tab in your bot's application menu and make sure all the bot's intents are enabled.
-<img src=https://i.imgur.com/sNBBl58.png" alt="Required Intents" width="100" height="100"/>
+![sNBBl58](https://github.com/user-attachments/assets/65bc634a-9bda-4774-a177-71a51889c6ef)
 
 ## TODO List
 - Create a Dockerfile
