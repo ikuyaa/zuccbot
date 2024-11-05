@@ -30,7 +30,7 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 
 - You can use MongoDB by setting the .env variable "DB_TYPE" to "MONGO", or a locally stored DB using nedb-promises by changing "DB_TYPE" to "LOCAL". I'd recommend using "LOCAL" if you do not plan to use this in **a lot** of servers.
 
-- If you just want to play music by commands, you do not need to run /setup, or use a database. This command is only neccesary if you want to use the dedicated music channel feature. Make sure to set the "DB_TYPE" variable in the .env file to "LOCAL" if you plan to use the bot this way.
+- If you just want to play music by commands, you do not need to run /setup, or use a database. This command is only neccesary if you want to use the dedicated music channel feature, or set a DJ role. Make sure to set the "DB_TYPE" variable in the .env file to "LOCAL" if you plan to use the bot this way.
 
 ## TODO List
 - Create a Dockerfile

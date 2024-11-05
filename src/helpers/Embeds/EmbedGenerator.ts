@@ -56,7 +56,7 @@ export default class EmbedGenerator {
     public static NowPlaying(currentEmbed: EmbedBuilder, message: Message, player: KazagumoPlayer): EmbedBuilder {
         const embed = EmbedBuilder.from(currentEmbed);
         const fields: Array<any> = [];
-        if(player.queue.length > 0){
+        if(player.queue.length > 0 && player.queue.length <= 15){
             fields.push({ name: '**__Queue__**', value: ' ' });
             for(const track of player.queue) {
                 fields.push({ name: track.title, value: track.author }) 
