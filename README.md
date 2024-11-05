@@ -3,6 +3,7 @@
 
 ### **Please Note**
 I'm not a programming expert, I am a student. I made this project to practice. The code may not be perfect, but the bot *should* work without major bugs. If you find any bugs please open an issue and I'll get to it ASAP.
+This bot is in **BETA** please expect some features you may want to be missing. Feel free to open a discussion if you have any request!
 
 ## Table of Contents
 - [Features](#features)
