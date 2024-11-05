@@ -1,5 +1,5 @@
 import { EmbedBuilder, Colors, Message, User } from 'discord.js';
-import {KazagumoPlayer, KazagumoTrack} from 'kazagumo';
+import {KazagumoPlayer, KazagumoQueue, KazagumoTrack} from 'kazagumo';
 
 export default class EmbedGenerator {
     public static Warning(message: string): EmbedBuilder {
@@ -53,15 +53,24 @@ export default class EmbedGenerator {
     }
 
     public static NowPlaying(currentEmbed: EmbedBuilder, message: Message, player: KazagumoPlayer): EmbedBuilder {
+        const currentTrack: KazagumoTrack = player.queue.current as KazagumoTrack;
+        const queue = player.queue;
         const embed = EmbedBuilder.from(currentEmbed);
         const fields: Array<any> = [];
-        if(player.queue.length > 0 && player.queue.length <= 15){
-            fields.push({ name: '**__Queue__**', value: ' ' });
-            for(const track of player.queue) {
-                fields.push({ name: track.title, value: track.author }) 
+        let counter: number = 0;
+        if(queue.length > 0){
+            fields.push({ name: `**__Queue__**`, value: ` ` });
+            for(const track of queue) {
+                fields.push({ name: track.title, value: track.author });
+                counter++;
+
+                if(counter === 5)
+                    break;
+            }
+                if(queue.length > 5) {
+                fields.push({ name: 'And more...', value: `There are ${queue.length - 5} more tracks in the queue.` });
             }
         }
-        const currentTrack: KazagumoTrack = player.queue.current as KazagumoTrack;
         const requester: User = currentTrack.requester as User;
         const title: string =  `🎵  Now playing: ${currentTrack.title}`;
         return embed
@@ -88,7 +97,7 @@ export default class EmbedGenerator {
 
         return new EmbedBuilder()
             .setTitle('🎵  Song Queued')
-            .setDescription(`[${track.title}](${track.uri})\n${track.author}`)
+            .setDescription(`[${track.title}](${track.uri})\n${track.author}\n\nRun \`/queue\` to see the queue.`)
             .setThumbnail(track.thumbnail as string)
             .setColor(Colors.Blurple)
             .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
@@ -106,5 +115,32 @@ export default class EmbedGenerator {
             .setDescription(`${track.title}\n${track.author}`)
             .setThumbnail(track.thumbnail as string)
             .setColor(Colors.Blurple);
+    }
+
+    public static QueueEmbed(queue: KazagumoQueue) {
+        const embed = new EmbedBuilder()
+            .setTitle(`🎶  Now Playing ${queue.current?.title} | ${queue.current?.author}`)
+            .setColor(Colors.Blurple);
+        const fields: Array<any> = [];
+        let counter: number = 0;
+        if(queue.length > 0){
+            fields.push({ name: `**__Queue__**`, value: ` ` });
+            for(const track of queue) {
+                fields.push({ name: track.title, value: track.author });
+                counter++;
+
+                if(counter === 15)
+                    break;
+            }
+                if(queue.length > 15) {
+                fields.push({ name: 'And more...', value: `There are ${queue.length - 15} more tracks in the queue.` });
+            }
+        }
+
+        embed.setFields(fields);
+        return embed;
+
+        embed.setFields(fields);
+        return embed;
     }
 }

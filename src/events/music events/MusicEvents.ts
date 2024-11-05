@@ -2,6 +2,7 @@ import { KazagumoPlayer, KazagumoQueue } from "kazagumo";
 import { EmbedGenerator, GuildHelper, LogHelper } from "../../helpers/Helpers";
 import { Guild, Message, TextChannel } from "discord.js";
 import client from "../../index";
+import {TrackStuckEvent} from "shoukaku";
 
 export default class MusicEvents {
     public static async onPlayerCreate(player: KazagumoPlayer) {
@@ -29,6 +30,11 @@ export default class MusicEvents {
         //Called when the queue is empty
         LogHelper.log(`Queue is empty in guild ${player.guildId}. Destroying player.`);
         await player.destroy();
+    }
+
+    public static async onPlayerStuck(player: KazagumoPlayer, data: TrackStuckEvent) {
+        //Called when the player gets stuck
+        LogHelper.error(`Player stuck in guild ${player.guildId} data: ${data}.`);
     }
 
     public static async onPlayerStart(player: KazagumoPlayer) {

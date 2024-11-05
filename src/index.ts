@@ -2,7 +2,7 @@ import {Client, GatewayIntentBits, Collection, ButtonBuilder, ButtonStyle, Actio
 import 'dotenv/config';
 import { CommandKit } from 'commandkit';
 import { Kazagumo, KazagumoPlayer, Plugins } from 'kazagumo';
-import { Connectors, NodeOption, ShoukakuOptions } from 'shoukaku';
+import { Connectors, NodeOption, ShoukakuOptions, PlayerUpdate, TrackStuckEvent } from 'shoukaku';
 import { DBHelper, Time } from "./helpers/Helpers";
 import MusicEvents from "./events/music events/MusicEvents";
 
@@ -94,7 +94,7 @@ client.musicManager.on('playerEnd', async (player: KazagumoPlayer) => {
 });
 
 client.musicManager.on('playerEmpty', async (player: KazagumoPlayer) => {
-    await MusicEvents.onPlayerEmpty(player);
+    //await MusicEvents.onPlayerEmpty(player);
 });
 
 client.musicManager.on('playerDestroy', async (player: KazagumoPlayer) => {
@@ -103,6 +103,10 @@ client.musicManager.on('playerDestroy', async (player: KazagumoPlayer) => {
 
 client.musicManager.on('playerStart', async (player: KazagumoPlayer) => {
     await MusicEvents.onPlayerStart(player);
+});
+
+client.musicManager.on('playerStuck', async (player: KazagumoPlayer, data: TrackStuckEvent) => {
+    await MusicEvents.onPlayerStuck(player, data);
 });
 
 
