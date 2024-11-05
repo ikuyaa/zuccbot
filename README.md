@@ -50,17 +50,17 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 - If you just want to play music by commands, you do not need to run `/setup`, or use a database. This command is only neccesary if you want to use the dedicated music channel feature, or set a DJ role. Make sure to set the "DB_TYPE" variable in the .env file to "LOCAL" if you do not plan to use `/setup`.
 
 ## Installation
-1. Create a bot from the [Discord Developer Portal](https://discord.com/developers)
-2. Go to the Bot tab in your bot's application menu and make sure all the bot's intents are enabled, and then save.
+- 1. Create a bot from the [Discord Developer Portal](https://discord.com/developers)
+- 2. Go to the Bot tab in your bot's application menu and make sure all the bot's intents are enabled, and then save.
 <img src="https://i.imgur.com/sNBBl58.png" alt="Requires Intents" width="600" height="150">
-3. In the same tab, generate a new Token for the bot. Save it, as this will go into the .env file.
-4. Clone the repository to whichever folder you desire, and Unzip it.
-5. Run `npm i` inside of the folder that was unzipped to install all the dependencies needed.
-6. Either rename, or copy, `example.env` to `.env` and fill it out.
-7. Run the `start` script in the package.json with whatever you desire (npm run, pm2, etc..)
-8. Make sure the bot is running and ready from the logs
-9. Make an invite link in the OAuth2 tab in your bot's developer portal application menu and give it permissions you desire. Make sure at least `Connect`, `Speak`, `Send Messages`, and `Manage Channels` are checked. 
-10. Start using slash commands, or run `/setup` to set a DJ role and/or dedicated music channel.
+- 3. In the same tab, generate a new Token for the bot. Save it, as this will go into the .env file.
+- 4. Clone the repository to whichever folder you desire, and Unzip it.
+- 5. Run `npm i` inside of the folder that was unzipped to install all the dependencies needed.
+- 6. Either rename, or copy, `example.env` to `.env` and fill it out.
+- 7. Run the `start` script in the package.json with whatever you desire (npm run, pm2, etc..)
+- 8. Make sure the bot is running and ready from the logs
+- 9. Make an invite link in the OAuth2 tab in your bot's developer portal application menu and give it permissions you desire. Make sure at least `Connect`, `Speak`, `Send Messages`, and `Manage Channels` are checked. 
+- 10. Start using slash commands, or run `/setup` to set a DJ role and/or dedicated music channel.
 
 
 ## FAQ
