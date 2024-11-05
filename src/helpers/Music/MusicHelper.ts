@@ -1,4 +1,4 @@
-import { GuildMember, Interaction, Message, Presence, VoiceBasedChannel, VoiceChannel, VoiceState} from "discord.js";
+import { GuildMember, Interaction, Message, Presence, VoiceBasedChannel} from "discord.js";
 import { KazagumoPlayer, KazagumoSearchResult } from "kazagumo";
 import client from "../../index";
 import { EmbedGenerator, MessageHelper, Time } from "../Helpers";

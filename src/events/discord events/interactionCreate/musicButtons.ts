@@ -1,6 +1,6 @@
-import {Interaction, InteractionWebhook, Message} from "discord.js";
+import {Interaction} from "discord.js";
 import client from "../../../index";
-import { GuildHelper, EmbedGenerator, MusicHelper } from "../../../helpers/Helpers";
+import { EmbedGenerator, MusicHelper } from "../../../helpers/Helpers";
 import { KazagumoPlayer } from "kazagumo";
 
 export default async (interaction: Interaction) => {

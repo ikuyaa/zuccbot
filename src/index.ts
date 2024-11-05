@@ -1,8 +1,8 @@
 import {Client, GatewayIntentBits, Collection, ButtonBuilder, ButtonStyle, ActionRowBuilder} from "discord.js";
 import 'dotenv/config';
 import { CommandKit } from 'commandkit';
-import { Kazagumo, KazagumoPlayer, KazagumoQueue, Plugins } from 'kazagumo';
-import { Shoukaku, Connectors, NodeOption, ShoukakuOptions, PlayerUpdate } from 'shoukaku';
+import { Kazagumo, KazagumoPlayer, Plugins } from 'kazagumo';
+import { Connectors, NodeOption, ShoukakuOptions } from 'shoukaku';
 import { DBHelper, Time } from "./helpers/Helpers";
 import MusicEvents from "./events/music events/MusicEvents";
 

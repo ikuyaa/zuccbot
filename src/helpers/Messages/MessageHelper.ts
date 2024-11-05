@@ -1,5 +1,3 @@
-import Time from '../Time/Time';
-
 export default class MessageHelper {
     static DeleteTimed(interaction: any, time: number, notReply: boolean = false): NodeJS.Timeout | void {
 

@@ -1,5 +1,5 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, Colors, Message } from 'discord.js';
 
 
 export const data = new SlashCommandBuilder()

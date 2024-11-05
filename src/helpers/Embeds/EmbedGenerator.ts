@@ -1,6 +1,5 @@
-import tr from 'date-and-time/locale/tr';
 import { EmbedBuilder, Colors, Message, User } from 'discord.js';
-import {KazagumoPlayer, KazagumoSearchResult, KazagumoTrack} from 'kazagumo';
+import {KazagumoPlayer, KazagumoTrack} from 'kazagumo';
 
 export default class EmbedGenerator {
     public static Warning(message: string): EmbedBuilder {

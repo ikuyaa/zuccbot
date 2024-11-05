@@ -1,8 +1,6 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message, GuildMember, PermissionsBitField, VoiceChannel, VoiceState, VoiceBasedChannel } from 'discord.js';
-import client from '../../index';
+import { SlashCommandBuilder, GuildMember, PermissionsBitField, VoiceBasedChannel } from 'discord.js';
 import {EmbedGenerator, LogHelper, MessageHelper, MusicHelper, Time} from "../../helpers/Helpers";
-import { KazagumoPlayer } from "kazagumo";
 import 'dotenv/config';
 
 

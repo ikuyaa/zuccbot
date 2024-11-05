@@ -1,4 +1,4 @@
-import {PermissionFlagsBits, PermissionsBitField} from 'discord.js';
+import {PermissionFlagsBits} from 'discord.js';
 import client from '../../index';
 
 export default class UserHelper {

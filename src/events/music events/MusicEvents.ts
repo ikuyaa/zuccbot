@@ -1,6 +1,6 @@
 import { KazagumoPlayer, KazagumoQueue } from "kazagumo";
 import { EmbedGenerator, GuildHelper, LogHelper } from "../../helpers/Helpers";
-import { Guild, GuildBasedChannel, GuildChannel, Message, TextChannel } from "discord.js";
+import { Guild, Message, TextChannel } from "discord.js";
 import client from "../../index";
 
 export default class MusicEvents {

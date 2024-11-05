@@ -1,5 +1,5 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import {KazagumoPlayer} from "kazagumo";
 import { EmbedGenerator, Time, MessageHelper, MusicHelper } from "../../helpers/Helpers";
 

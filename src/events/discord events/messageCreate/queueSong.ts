@@ -1,4 +1,4 @@
-import {Client, Message, GuildMember, PermissionsBitField, MessageType, GuildChannel, TextChannel, VoiceChannel, InteractionType, Embed, VoiceState, VoiceBasedChannel} from "discord.js";
+import {Client, Message, GuildMember, PermissionsBitField, VoiceBasedChannel} from "discord.js";
 import { KazagumoPlayer } from "kazagumo";
 import {LogHelper, MusicHelper, EmbedGenerator, MessageHelper, Time, GuildHelper} from "../../../helpers/Helpers";
 

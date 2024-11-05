@@ -1,5 +1,5 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, EmbedBuilder, Colors, CommandInteraction, Message, ActionRow, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, InteractionResponse, ChannelType, ButtonBuilder, ButtonStyle, Channel } from 'discord.js';
+import { SlashCommandBuilder, CommandInteraction, Message, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ChannelType, ButtonBuilder, ButtonStyle, Channel } from 'discord.js';
 import { EmbedGenerator, LogHelper, MessageHelper, UserHelper } from "../../helpers/Helpers";
 import { GuildHelper, Time } from "../../helpers/Helpers";
 import {IGuild} from "../../models/Guilds/Guild";
