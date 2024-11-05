@@ -58,6 +58,7 @@ export default class EmbedGenerator {
         const embed = EmbedBuilder.from(currentEmbed);
         const fields: Array<any> = [];
         let counter: number = 0;
+        fields.push({ name: ' ', value: `[Open song in browser](${currentTrack.uri})`})
         if(queue.length > 0){
             fields.push({ name: `**__Queue__**`, value: ` ` });
             for(const track of queue) {
@@ -87,6 +88,7 @@ export default class EmbedGenerator {
         return new EmbedBuilder()
             .setTitle('🎵  Now Playing')
             .setDescription(`[${track.title}](${track.uri})\n${track.author}`)
+            .setFields({ name: ' ', value: `[Open song in browser](${track.uri})`})
             .setThumbnail(track.thumbnail as string)
             .setColor(Colors.Blurple)
             .setFooter({ text: `Requested by ${requester.globalName}`, iconURL: requester.displayAvatarURL() });
@@ -136,9 +138,6 @@ export default class EmbedGenerator {
                 fields.push({ name: 'And more...', value: `There are ${queue.length - 15} more tracks in the queue.` });
             }
         }
-
-        embed.setFields(fields);
-        return embed;
 
         embed.setFields(fields);
         return embed;
