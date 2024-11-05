@@ -51,8 +51,7 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 
 ## Installation
 1. Create a bot from the [Discord Developer Portal](https://discord.com/developers)
-2. Go to the Bot tab in your bot's application menu and make sure all the bot's intents are enabled, and then save.
-* <img src="https://i.imgur.com/sNBBl58.png" alt="Requires Intents" width="600" height="150">
+2. Go to the Bot tab in your bot's application menu and make sure all the bot's intents are enabled, and then save. <img src="https://i.imgur.com/sNBBl58.png" alt="Requires Intents" width="600" height="150">
 3. In the same tab, generate a new Token for the bot. Save it, as this will go into the .env file.
 4. Clone the repository to whichever folder you desire, and Unzip it.
 5. Run `npm i` inside of the folder that was unzipped to install all the dependencies needed.
