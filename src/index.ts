@@ -94,7 +94,7 @@ client.musicManager.on('playerEnd', async (player: KazagumoPlayer) => {
 });
 
 client.musicManager.on('playerEmpty', async (player: KazagumoPlayer) => {
-    //await MusicEvents.onPlayerEmpty(player);
+    await MusicEvents.onPlayerEmpty(player);
 });
 
 client.musicManager.on('playerDestroy', async (player: KazagumoPlayer) => {
