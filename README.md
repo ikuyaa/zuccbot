@@ -31,6 +31,7 @@ This bot is in **BETA** please expect some features you may want to be missing. 
 - `/volume` - Changes the volume of the music playback between 1-100%. (Changes will take effect on the next song)
 - `/queue` - Displays the player's current queue.
 - `/setup` - Sets up the bot to use a dedicated music channel, or a DJ row. 
+- `/reset` - Resets the bot to it's default state, removing the server from the database.
 
 ## Requirements
 - NodeJS v18 or later.
