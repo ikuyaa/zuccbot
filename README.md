@@ -32,6 +32,11 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 
 - If you just want to play music by commands, you do not need to run /setup, or use a database. This command is only neccesary if you want to use the dedicated music channel feature, or set a DJ role. Make sure to set the "DB_TYPE" variable in the .env file to "LOCAL" if you plan to use the bot this way.
 
+## Installation
+⁣1. Create a bot from the Discord Developer Portal
+2. Go to the Bot tab in your bot's application menu and make sure all the bot's intents are enabled.
+<img src=https://i.imgur.com/sNBBl58.png" alt="Required Intents" width="100" height="100"/>
+
 ## TODO List
 - Create a Dockerfile
 
