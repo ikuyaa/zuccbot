@@ -27,10 +27,15 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
     }
 
     if(!channel?.permissionsFor(interaction.guild?.members.me as any).has(PermissionsBitField.Flags.Connect)) {
-        const embed = EmbedGenerator.ChannelLocked('Please give me permission to join your channel, or select a different channel.');
-        await interaction.reply({ embeds: [embed] });
-        MessageHelper.DeleteTimed(interaction, Time.secs(10));
-        return;
+        try {
+            const embed = EmbedGenerator.ChannelLocked('Please give me permission to join your channel, or select a different channel.');
+            await interaction.reply({ embeds: [embed] });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+            return;
+        } catch (err: any) { //The bot probably can't send a message in that channel
+            LogHelper.error(err);
+            return;
+        }
     }
 
     if(!player)

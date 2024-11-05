@@ -14,10 +14,15 @@ export async function run({interaction, client, handler}: SlashCommandProps) {
 
     //Check if the user has the required permissions.
     if(!await UserHelper.isUserAdmin(guildId, userId)) {
-        const embed = EmbedGenerator.Error(`You must be an administrator to reset ${process.env.BOT_NAME}.`);
-        await interaction.followUp({ embeds: [embed], ephemeral: true });
-        MessageHelper.DeleteTimed(interaction, Time.secs(10));
-        return;
+        try {
+            const embed = EmbedGenerator.Error(`You must be an administrator to reset ${process.env.BOT_NAME}.`);
+            await interaction.followUp({ embeds: [embed], ephemeral: true });
+            MessageHelper.DeleteTimed(interaction, Time.secs(10));
+            return;
+        } catch (err: any) {
+            LogHelper.error(err);
+            return;
+        }
     }
 
     //Making the embed and buttons to send

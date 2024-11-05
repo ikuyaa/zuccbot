@@ -1,5 +1,5 @@
 import { CommandOptions, SlashCommandProps} from "commandkit";
-import { SlashCommandBuilder, CommandInteraction, Message, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ChannelType, ButtonBuilder, ButtonStyle, Channel } from 'discord.js';
+import { SlashCommandBuilder, CommandInteraction, Message, Interaction, ActionRowBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ChannelType, ButtonBuilder, ButtonStyle, Channel, TextChannel } from 'discord.js';
 import { EmbedGenerator, LogHelper, MessageHelper, UserHelper } from "../../helpers/Helpers";
 import { GuildHelper, Time } from "../../helpers/Helpers";
 import {IGuild} from "../../models/Guilds/Guild";
@@ -249,7 +249,7 @@ async function completeSetup(newGuild: IGuild, interaction: Interaction, channel
         if(channel) {
             const embed = EmbedGenerator.MusicDefault();
             if(!channel.isSendable()) { //If we can't send to the required channel, send a message to the interaction.
-                const embed = EmbedGenerator.ChannelLocked(`I don't have permission to send messages in the music channel. Please make sure I have the required permissions.`);
+                const embed = EmbedGenerator.ChannelLocked(`I don't have permission to send messages in the music channel. Please make sure I have the required permissions. Run \`/reset\` and then \`/setup\` to setup the bot again.`);
                 const message: Message = await interaction.followUp({ embeds: [embed] });
                 MessageHelper.DeleteTimed(message, Time.secs(10), true);
                 return;

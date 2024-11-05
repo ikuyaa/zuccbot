@@ -3,19 +3,10 @@ import { KazagumoPlayer } from "kazagumo";
 import {LogHelper, MusicHelper, EmbedGenerator, MessageHelper, Time, GuildHelper} from "../../../helpers/Helpers";
 
 export default async (message: Message, client: Client) => {
-    const musicMessageId: string | null = await GuildHelper.GetMainMusicMessageId(message.guildId as string);
-    const currentChannelId: string = message.channel.id as string;
-    const musicChannelId: string | null = await GuildHelper.GetMainMusicChannelId(message.guildId as string);
-
     //Making sure we don't respond to ourselves.
     if(message.author.bot) 
         return;
 
-    //Making sure we're in the music channel
-    if(currentChannelId !== musicChannelId) {
-        return;
-    }
-    
     //Making sure the guild is setup
     if(!await GuildHelper.IsGuildRegistered(message.guild?.id as string)) {
         const embed = EmbedGenerator.Error('This server is not setup. Please run `/setup` to setup the server.');
@@ -24,6 +15,16 @@ export default async (message: Message, client: Client) => {
         await message.delete();
         return;
     }
+
+    const musicMessageId: string | null = await GuildHelper.GetMainMusicMessageId(message.guildId as string);
+    const currentChannelId: string = message.channel.id as string;
+    const musicChannelId: string | null = await GuildHelper.GetMainMusicChannelId(message.guildId as string);
+
+    //Making sure we're in the music channel
+    if(!musicChannelId || currentChannelId !== musicChannelId) {
+        return;
+    }
+
 
     const channel: VoiceBasedChannel = message.member?.voice.channel as VoiceBasedChannel;
     const song = message.content;
@@ -39,10 +40,15 @@ export default async (message: Message, client: Client) => {
 
     //Making sure we have the permission to join the voice channel.
     if(!channel.permissionsFor(message.guild?.members.me as any).has(PermissionsBitField.Flags.Connect)) {
-        const embed = EmbedGenerator.ChannelLocked('Please give me permission to join your channel, or select a different channel.');
-        const errorMsg: Message = await channel.send({ embeds: [embed] });
-        MessageHelper.DeleteTimed(errorMsg, Time.secs(10), true);
-        return;
+        try {
+            const embed = EmbedGenerator.ChannelLocked('Please give me permission to join your channel, or select a different channel.');
+            const errorMsg: Message = await channel.send({ embeds: [embed] });
+            MessageHelper.DeleteTimed(errorMsg, Time.secs(10), true);
+            return;
+        } catch (err: any) {
+            LogHelper.error(err);
+            return;
+        }
     }
 
     //Making sure there is a player, if not we're creating one
