@@ -24,7 +24,7 @@ This bot is in **BETA** please expect some features you may want to be missing. 
 
 ## Commands
 - `/play` - Plays a song by URL (Youtube / Souncloud) or by a text search (Uses Youtube to search)
-- `/pause` - Pauses. or unpauses, the player based on it's current paused state.
+- `/pause` - Pauses, or unpauses, the player based on it's current paused state.
 - `/skip` - Skips the current song. If the queue is empty, the player will be destroyed.
 - `/stop` - Stops the current song, and destroys the player and clears the queue.
 - `/previous` - Plays the previous song.
