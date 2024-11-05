@@ -75,6 +75,4 @@ This bot is in **BETA** please expect some features you may want to be missing. 
 
 - Create a Dockerfile
 
-- Add music looping
-
 - Add caching via redis (maybe)
