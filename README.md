@@ -64,10 +64,10 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 
 
 ## FAQ
-##### :question: The bot won't play certain songs, regardless if I use a link or a search!
+#### :question: The bot won't play certain songs, regardless if I use a link or a search!
 - Some songs, or videos, on Youtube are either age restricted, or have a warning for "disturbing content" or something or the sorts. This doesn't allow the bot to get the song, as it cannot get passed the warning. Either find a reupload on Youtube without the restrictions, or use Soundcloud.
 
-##### :question: My music channel will not take in links or searches!
+#### :question: My music channel will not take in links or searches!
 - Make sure the bot has permission to see the channel you are in. In some cases, when the setup takes place, if the bot cannot see the channel you assigned to be the music channel it cannot store the embed message's ID. Run `/reset`, make sure the bot can see the channel you are assigning, then run `/setup` again. 
 
 ## Planned Features
