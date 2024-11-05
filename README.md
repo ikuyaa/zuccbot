@@ -58,7 +58,7 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 6. Either rename, or copy, `example.env` to `.env` and fill it out.
 7. Run the `start` script in the package.json with whatever you desire (npm run, pm2, etc..)
 8. Make sure the bot is running and ready from the logs
-9. Make an invite link in the OAuth2 tab in your bot's developer portal application menu and give it permissions you desire. Make sure at least `Connect`, `Speak`, `Send Messages`, and `Manage Channels` are checked. 
+9. Make an invite link in the OAuth2 tab in your bot's developer portal application menu and give it permissions you desire. Make sure at least `Connect`, `Speak`, `Send Messages`, and `Manage Channels` are checked. If you don't want to run into risk with the bot messing up without required permissions, just use `Administrator`. The bot does not have any logic to abuse the Administrator role.
 10. Start using slash commands, or run `/setup` to set a DJ role and/or dedicated music channel.
 
 
