@@ -37,15 +37,17 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 - MongoDB (Only if you plan to use the bot with mongo, there is a local database option using nedb-promises in the .env file)
 
 ## Things to note
-- Make sure to rename example.env to .env and fill it out.
+- Make sure to rename `example.env` to `.env` and fill it out.
 
-- At this time, the bot only support Youtube and Soundcloud links, and will use Youtube as a search default if a link is not provided.
+- If you are using "LOCAL" for the DB_TYPE make sure you **ALWAYS** back up the `Guilds.db` file in the `src/localDatabases` folder, or you will lose all information about guilds (DJ roles, Music Channels).
 
-- If you do not run /setup, anyone will be able to play music. Use /setup to set a DJ role.
+- You can use MongoDB by setting the .env variable "DB_TYPE" to "MONGO", or a locally stored DB using nedb-promises by changing "DB_TYPE" to "LOCAL". I'd recommend using "LOCAL" if you do not plan to use this in **a lot** of servers, or don't want to save your data outside of a local environment. I'd recommend "MONGO" if you don't want to backup Guilds.db everytime you reinstall or update the bot.
 
-- You can use MongoDB by setting the .env variable "DB_TYPE" to "MONGO", or a locally stored DB using nedb-promises by changing "DB_TYPE" to "LOCAL". I'd recommend using "LOCAL" if you do not plan to use this in **a lot** of servers.
+- At this time, the bot only support `Youtube` and `Soundcloud` links, and will use Youtube as a search default if a link is not provided.
 
-- If you just want to play music by commands, you do not need to run /setup, or use a database. This command is only neccesary if you want to use the dedicated music channel feature, or set a DJ role. Make sure to set the "DB_TYPE" variable in the .env file to "LOCAL" if you plan to not use /setup.
+- If you do not run `/setup`, anyone will be able to play music. Use `/setup` to set a DJ role.
+
+- If you just want to play music by commands, you do not need to run `/setup`, or use a database. This command is only neccesary if you want to use the dedicated music channel feature, or set a DJ role. Make sure to set the "DB_TYPE" variable in the .env file to "LOCAL" if you do not plan to use `/setup`.
 
 ## Installation
 1. Create a bot from the [Discord Developer Portal](https://discord.com/developers)
@@ -57,7 +59,8 @@ I'm not a programming expert, I am a student. I made this project to practice. T
 6. Either rename, or copy, `example.env` to `.env` and fill it out.
 7. Run the `start` script in the package.json with whatever you desire (npm run, pm2, etc..)
 8. Make sure the bot is running and ready from the logs
-9. Start using slash commands, or run `/setup` to set a DJ role and/or dedicated music channel.
+9. Make an invite link in the OAuth2 tab in your bot's developer portal application menu and give it permissions you desire. Make sure at least `Connect`, `Speak`, `Send Messages`, and `Manage Channels` are checked. 
+10. Start using slash commands, or run `/setup` to set a DJ role and/or dedicated music channel.
 
 
 ## FAQ
