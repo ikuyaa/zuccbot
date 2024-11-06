@@ -74,6 +74,8 @@ Make sure the bot has permission to see the channel you are in. In some cases, w
 ## Planned Features
 - `/settings` command to change the dj role, or the dedicated music channel.
 
+- Add a boolean option to return search results from a search query incase the wrong song is playing.
+
 - Create a Dockerfile
 
 - Add caching via redis (maybe)
