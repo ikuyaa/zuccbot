@@ -19,7 +19,7 @@ This bot is in **BETA** please expect some features you may want to be missing. 
 - Play Youtube or Soundcloud tracks.
 - Queue Playlist
 - Change the player's volume
-- Dedicated music channel where you can paste links or use search queries. (Inspired by Hydra Bot.)
+- Dedicated music channel where you can paste links or use search queries. (Inspired by Hydra Bot.)<br /><img src="https://i.imgur.com/6PFHfGJ.png" alt="Music Embed" width="250" height="250">
 - Set a DJ role to lock all commands behind.
 
 ## Commands
