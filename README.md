@@ -1,4 +1,4 @@
-# Music Bot
+# zuccbot 🎶
 
 
 ### **Please Note**

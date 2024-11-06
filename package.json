@@ -1,5 +1,5 @@
 {
-  "name": "musicbot-new",
+  "name": "zuccbot-music",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Music bot for Discord",
   "dependencies": {
     "commandkit": "^0.1.10",
     "date-and-time": "^3.6.0",
