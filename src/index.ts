@@ -13,7 +13,6 @@ declare module 'discord.js' {
         SetupButtons: { [key: string]: ButtonBuilder };
         MusicButtons: { [key: string]: ButtonBuilder };
         ActionRows: { [key: string]: ActionRowBuilder }
-        CachedChannels: Collection<string, string>; //GuildId, ChannelId
     }
 }
 
@@ -48,7 +47,6 @@ if(process.env.DB_TYPE?.toUpperCase() === 'MONGO')
 
 //Creating collectors
 client.cooldowns = new Collection();
-client.CachedChannels = new Collection();
 
 
 //Lavalink Nodes
