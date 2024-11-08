@@ -23,14 +23,14 @@ This bot is in **BETA** please expect some features you may want to be missing. 
 - Set a DJ role to lock all commands behind.
 
 ## Commands
-- `/play` - Plays a song by URL (Youtube / Souncloud) or by a text search (Uses Youtube to search)
+- `/play` - Plays a song by, or queues one if one is playing, URL (Youtube / Souncloud) or by a text search (Uses Youtube to search)
 - `/pause` - Pauses, or unpauses, the player based on it's current paused state.
 - `/skip` - Skips the current song. If the queue is empty, the player will be destroyed.
 - `/stop` - Stops the current song, and destroys the player and clears the queue.
 - `/previous` - Plays the previous song.
 - `/volume` - Changes the volume of the music playback between 1-100%. (Changes will take effect on the next song)
 - `/queue` - Displays the player's current queue.
-- `/setup` - Sets up the bot to use a dedicated music channel, or a DJ row. 
+- `/setup` - Sets up the bot to use a dedicated music channel, or a DJ role. 
 - `/reset` - Resets the bot to it's default state, removing the server from the database.
 
 ## Requirements
