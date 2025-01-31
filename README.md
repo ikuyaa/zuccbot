@@ -35,7 +35,7 @@ This bot is in **BETA** please expect some features you may want to be missing. 
 
 ## Requirements
 - NodeJS v18 or later.
-- LavaLink v4+ server (You can find public ones here if you wish to not host your own: https://lavalink.darrennathanael.com/)
+- LavaLink v4+ server with the [youtube-source](https://github.com/lavalink-devs/youtube-source) plugin. (You can find public servers here if you wish to not host your own: https://lavalink.darrennathanael.com/)
 - MongoDB (Only if you plan to use the bot with mongo, there is a local database option using nedb-promises in the .env file)
 
 ## Things to note
